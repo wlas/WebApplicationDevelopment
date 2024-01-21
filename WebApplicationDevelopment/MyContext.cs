@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WebApplicationDevelopment.Models.Entities;
 
-namespace WebApplicationDevelopment.Models.Entities
+namespace WebApplicationDevelopment
 {
     public class MyContext : DbContext
-    {        
+    {
         public DbSet<Product> Products { get; set; }
         public DbSet<Store> Storages { get; set; }
         public DbSet<Category> Categorys { get; set; }
@@ -13,11 +14,10 @@ namespace WebApplicationDevelopment.Models.Entities
         {
 
         }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseNpgsql("Server=localhost;Database=dbGB;Uid=gb;Pwd=123456;TrustServerCertificate=true")
-                .UseLazyLoadingProxies();
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseLazyLoadingProxies();
+        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -70,10 +70,6 @@ namespace WebApplicationDevelopment.Models.Entities
                 entity.Property(e => e.Description)
                     .HasMaxLength(255)
                     .IsRequired();
-
-                entity.Property(e => e.Count)
-                .HasColumnName("ProductCount");
-
             });
         }
     }

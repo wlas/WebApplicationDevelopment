@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebApplicationDevelopment.Models.Entities;
+using WebApplicationDevelopment.Interfaces;
+using WebApplicationDevelopment.Models.DTO;
 
 namespace WebApplicationDevelopment.Controllers
 {
@@ -7,83 +8,56 @@ namespace WebApplicationDevelopment.Controllers
     [Route("[controller]")]
     public class StoreController : Controller
     {
-        [HttpGet("getStore")]
-        public IActionResult GetStore()
-        {
-            try
-            {
-                using (var context = new MyContext())
-                {
-                    var stores = context.Storages.Select(x => new Store()
-                    {
-                        Id = x.Id,
-                        Name = x.Name,
-                        Description = x.Description
-                    }).ToList();
-                    return Ok(stores);
-                }
-            }
-            catch
-            {
-                return StatusCode(500);
-            }
-        }
+		private readonly IEntityService<StoreDto> _storeService;
+		public StoreController(IEntityService<StoreDto> storeService)
+		{
+			_storeService = storeService;
+		}
 
-        [HttpPost("putStore")]
-        public IActionResult PutStore([FromQuery] string name, string description)
-        {
-            try
-            {
-                using (var context = new MyContext())
-                {
-                    if (!context.Storages.Any(x => x.Name.ToLower().Equals(name)))
-                    {
-                        context.Storages.Add(new Store()
-                        {
-                            Name = name,
-                            Description = description,
-                            Count = 1                            
-                        });
-                        context.SaveChanges();
-                        return Ok();
-                    }
-                    else
-                    {
-                        return StatusCode(409);
-                    }
-                }
-            }
-            catch
-            {
-                return StatusCode(500);
-            }
-        }
+		[HttpGet("getStore")]
+		public IActionResult GetStories()
+		{
+			var response = _storeService.GetEntitys();
+			return Ok(response);
+		}
 
-        [HttpDelete("storeId")]
-        public IActionResult DeleteStore(int storeId)
-        {
-            try
-            {
-                using (var context = new MyContext())
-                {
-                    Store? store = context.Storages.FirstOrDefault(x => x.Id == storeId);
+		[HttpGet("store/{id}")]
+		public IActionResult GetStore(int id)
+		{
+			StoreDto store = _storeService.GetEntity(id);
+			return Ok(store);
+		}
 
-                    if (store != null)
-                    {
-                        context.Storages.Remove(store);
-                        context.SaveChanges();
-                        return Ok();
-                    }
-                    else
-                    {
-                        return StatusCode(409);
-                    }
-                }
-            }
-            catch
-            {
-                return StatusCode(500);
-            }
-        }
-    }
+		[HttpPost("addStore")]
+		public IActionResult PutStore([FromQuery] string name, string description)
+		{
+			try
+			{
+				StoreDto storeDto = new StoreDto()
+				{
+					Name = name,
+					Description = description
+				};
+				_storeService.SaveEntity(storeDto);
+				return Ok();
+			}
+			catch (Exception ex)
+			{
+				return Content(ex.Message);
+			}
+		}
+
+		[HttpDelete("storeId")]
+		public IActionResult DeleteStore(int storeId)
+		{
+			if (!_storeService.DeleteEntity(storeId))
+			{
+				return Ok();
+			}
+			else
+			{
+				return StatusCode(500);
+			}
+		}
+	}
 }
