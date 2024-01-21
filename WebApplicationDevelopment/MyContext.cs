@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WebApplicationDevelopment.Models.Entities;
 
-namespace WebApplicationDevelopment.Models.Entities
+namespace WebApplicationDevelopment
 {
     public class MyContext : DbContext
-    {        
+    {
         public DbSet<Product> Products { get; set; }
         public DbSet<Store> Storages { get; set; }
         public DbSet<Category> Categorys { get; set; }
