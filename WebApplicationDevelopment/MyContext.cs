@@ -14,11 +14,10 @@ namespace WebApplicationDevelopment
         {
 
         }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseNpgsql("Server=localhost;Database=dbGB;Uid=gb;Pwd=123456;TrustServerCertificate=true")
-                .UseLazyLoadingProxies();
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseLazyLoadingProxies();
+        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -71,10 +70,6 @@ namespace WebApplicationDevelopment
                 entity.Property(e => e.Description)
                     .HasMaxLength(255)
                     .IsRequired();
-
-                entity.Property(e => e.Count)
-                .HasColumnName("ProductCount");
-
             });
         }
     }

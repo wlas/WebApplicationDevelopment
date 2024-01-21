@@ -4,7 +4,7 @@ namespace WebApplicationDevelopment.Models.DTO
 {
 	public class CategoryDto : BaseModelDto
 	{
-		public virtual List<Product?> Products { get; set; } = new List<Product>();
+		public virtual List<ProductDto?> Products { get; set; } = new List<ProductDto>();
 
 	}
 }

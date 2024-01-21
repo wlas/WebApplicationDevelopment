@@ -3,9 +3,9 @@ using System.Text.RegularExpressions;
 using WebApplicationDevelopment.Models.DTO;
 using WebApplicationDevelopment.Models.Entities;
 
-internal class MappingProFile : Profile
+public class MappingProFile : Profile
 {
-	protected MappingProFile()
+	public MappingProFile()
 	{
 		CreateMap<Product, ProductDto>(MemberList.Destination).ReverseMap();
 		CreateMap<Category, CategoryDto>(MemberList.Destination).ReverseMap();

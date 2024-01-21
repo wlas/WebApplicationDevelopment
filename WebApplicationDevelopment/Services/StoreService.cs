@@ -46,17 +46,17 @@ namespace WebApplicationDevelopment.Services
 			}
 		}
 
-		public void SaveEntity(StoreDto store)
+		public void SaveEntity(StoreDto storeDto)
 		{
 			using (_myContext)
 			{
-				if (store.Id == default)
+				if (storeDto.Id == default)
 				{
-					_myContext.Entry(_mapper.Map<Category>(store)).State = EntityState.Added;
+					_myContext.Entry(_mapper.Map<Store>(storeDto)).State = EntityState.Added;
 				}
 				else
 				{
-					_myContext.Entry(_mapper.Map<Category>(store)).State = EntityState.Modified;
+					_myContext.Entry(_mapper.Map<Store>(storeDto)).State = EntityState.Modified;
 				}
 				_myContext.SaveChanges();
 			}

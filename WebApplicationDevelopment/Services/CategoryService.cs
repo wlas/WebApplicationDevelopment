@@ -52,17 +52,17 @@ namespace WebApplicationDevelopment.Services
 				return _mapper.Map<CategoryDto>(_myContext.Categorys.FirstOrDefault(x => x.Id == id));
 			}
 		}
-		public void SaveEntity(CategoryDto category)
+		public void SaveEntity(CategoryDto categoryDto)
 		{
 			using (_myContext)
 			{
-				if(category.Id == default)
+				if(categoryDto.Id == default)
 				{
-					_myContext.Entry(_mapper.Map<Category>(category)).State = EntityState.Added; 
+					_myContext.Entry(_mapper.Map<Category>(categoryDto)).State = EntityState.Added; 
 				}
 				else
 				{
-					_myContext.Entry(_mapper.Map<Category>(category)).State = EntityState.Modified;
+					_myContext.Entry(_mapper.Map<Category>(categoryDto)).State = EntityState.Modified;
 				}
 				_myContext.SaveChanges();
 			}

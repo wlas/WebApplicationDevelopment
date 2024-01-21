@@ -4,7 +4,6 @@ namespace WebApplicationDevelopment.Models.DTO
 {
 	public class StoreDto : BaseModelDto
 	{
-		public virtual List<Product?> Products { get; set; }
-		public int Count { get; set; }
+		public virtual List<ProductDto?> Products { get; set; }
 	}
 }

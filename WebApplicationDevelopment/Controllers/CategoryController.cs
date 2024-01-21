@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebApplicationDevelopment.Models.Entities;
+using WebApplicationDevelopment.Interfaces;
+using WebApplicationDevelopment.Models.DTO;
 
 namespace WebApplicationDevelopment.Controllers
 {
@@ -7,82 +8,56 @@ namespace WebApplicationDevelopment.Controllers
     [Route("[controller]")]
     public class CategoryController : Controller
     {
-        [HttpGet("getCategory")]
-        public IActionResult GetCategory()
-        {
-            try
-            {
-                using (var context = new MyContext())
-                {
-                    var categories = context.Categorys.Select(x => new Category()
-                    {
-                        Id = x.Id,
-                        Name = x.Name,
-                        Description = x.Description
-                    }).ToList();
-                    return Ok(categories);
-                }
-            }
-            catch
-            {
-                return StatusCode(500);
-            }
-        }
+		private readonly IEntityService<CategoryDto> _categoryService;
+		public CategoryController(IEntityService<CategoryDto> categoryService)
+		{
+			_categoryService = categoryService;
+		}
 
-        [HttpPost("putCategory")]
-        public IActionResult PutCategories([FromQuery] string name, string description)
-        {
-            try
-            {
-                using (var context = new MyContext())
-                {
-                    if (!context.Categorys.Any(x => x.Name.ToLower().Equals(name)))
-                    {
-                        context.Categorys.Add(new Category()
-                        {
-                            Name = name,
-                            Description = description
-                        });
-                        context.SaveChanges();
-                        return Ok();
-                    }
-                    else
-                    {
-                        return StatusCode(409);
-                    }
-                }
-            }
-            catch
-            {
-                return StatusCode(500);
-            }
-        }
+		[HttpGet("getCategory")]
+		public IActionResult GetCategorys()
+		{
+			var response = _categoryService.GetEntitys();
+			return Ok(response);
+		}
 
-        [HttpDelete("categoryId")]
-        public IActionResult DeleteCategory(int categoryId)
-        {
-            try
-            {
-                using (var context = new MyContext())
-                {
-                    Category? category = context.Categorys.FirstOrDefault(x => x.Id == categoryId);
+		[HttpGet("category/{id}")]
+		public IActionResult GetCategory(int id)
+		{
+			CategoryDto category = _categoryService.GetEntity(id);
+			return Ok(category);
+		}
 
-                    if (category != null)
-                    {
-                        context.Categorys.Remove(category);
-                        context.SaveChanges();
-                        return Ok();
-                    }
-                    else
-                    {
-                        return StatusCode(409);
-                    }
-                }
-            }
-            catch
-            {
-                return StatusCode(500);
-            }
-        }
-    }
+		[HttpPost("addCategory")]
+		public IActionResult PutCategory([FromQuery] string name, string description)
+		{
+			try
+			{
+				CategoryDto categoryDto = new CategoryDto()
+				{
+					Name = name,
+					Description = description					
+				};
+				_categoryService.SaveEntity(categoryDto);
+				return Ok();
+			}
+			catch (Exception ex)
+			{
+				return Content(ex.Message);
+			}
+		}
+
+		[HttpDelete("categoryId")]
+		public IActionResult DeleteCategory(int categoryId)
+		{
+			if (!_categoryService.DeleteEntity(categoryId))
+			{
+				return Ok();
+			}
+			else
+			{
+				return StatusCode(500);
+			}
+		}
+	}
 }

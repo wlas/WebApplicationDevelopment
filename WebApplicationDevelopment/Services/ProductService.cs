@@ -45,22 +45,22 @@ namespace WebApplicationDevelopment.Services
 		public IEnumerable<ProductDto> GetEntitys()
 		{
 			using (_myContext)
-			{
-				return _myContext.Products.Select(x => _mapper.Map<ProductDto>(x)).ToList();
+			{				
+				return _myContext.Products.Select(x => _mapper.Map<ProductDto>(x)).ToList();				
 			}
 		}
 
-		public void SaveEntity(ProductDto product)
+		public void SaveEntity(ProductDto productDto)
 		{
 			using (_myContext)
 			{
-				if (product.Id == default)
+				if (productDto.Id == default)
 				{
-					_myContext.Entry(_mapper.Map<Category>(product)).State = EntityState.Added;
+					_myContext.Entry(_mapper.Map<Product>(productDto)).State = EntityState.Added;
 				}
 				else
 				{
-					_myContext.Entry(_mapper.Map<Category>(product)).State = EntityState.Modified;
+					_myContext.Entry(_mapper.Map<Product>(productDto)).State = EntityState.Modified;
 				}
 				_myContext.SaveChanges();
 			}
