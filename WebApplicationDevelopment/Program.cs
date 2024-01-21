@@ -31,6 +31,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+// Подключение статических файлов
+var staticFiles = Path.Combine(Directory.GetCurrentDirectory(), "StaticFiles");
+Directory.CreateDirectory(staticFiles);
 
 app.UseHttpsRedirection();
 

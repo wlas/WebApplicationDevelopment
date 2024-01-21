@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApplicationDevelopment.Interfaces;
 using WebApplicationDevelopment.Models.DTO;
+using WebApplicationDevelopment.Utils;
 
 namespace WebApplicationDevelopment.Controllers
 {
@@ -61,6 +62,26 @@ namespace WebApplicationDevelopment.Controllers
 			{
 				return StatusCode(500);
 			}
+		}
+
+		[HttpGet(template:"GetProductCsv")]
+		public FileContentResult GetProductCsv()
+		{
+			var response = _productService.GetEntitys();
+			var content = FilesCSV.GetCsv(response);
+			return File(new System.Text.UTF8Encoding().GetBytes(content), "text/csv", "product.csv");
+		}
+
+		[HttpGet(template: "GetProductCsvUrl")]
+		public ActionResult<string> GetProductCsvUrl()
+		{
+			var response = _productService.GetEntitys();
+			var content = FilesCSV.GetCsv(response);
+
+			string fileName = "products" + DateTime.Now.ToString("ddMMyyyy") + ".csv";
+			System.IO.File.WriteAllText(Path.Combine(Directory.GetCurrentDirectory(),"StaticFiles", fileName), content);
+
+			return "https://" + Request.Host.ToString() + "/static/" + fileName;
 		}
 	}
 }

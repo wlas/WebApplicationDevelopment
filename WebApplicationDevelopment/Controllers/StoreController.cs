@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApplicationDevelopment.Interfaces;
 using WebApplicationDevelopment.Models.DTO;
-using WebApplicationDevelopment.Models.Entities;
 
 namespace WebApplicationDevelopment.Controllers
 {
